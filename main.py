@@ -45,7 +45,29 @@ class Seat():
 
 
 class Card():
+
     database = "banking.db"
+
+    def __init__(self, type, number, cvc, holder):
+        self.type = type
+        self.number = number
+        self.cvc = cvc
+        self.holder = holder
+
+    def validate(self, price):
+        """ Checks if Card is valid and has a balance.
+         Subtracts price from balance"""
+        connection = sqlite3.connect(self.database)
+        cursor = connection.cursor()
+        cursor.execute("""
+        UPDATE "Card" SET "balance" = ? WHERE "number" = ? and "cvc" = ?
+        """, [self.number, self.cvc])
+        result = cursor.fetchall()
+
+        if result:
+            balance = result[0][0]
+
+
 
 
 if __name__ == '__main__':
